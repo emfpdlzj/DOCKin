@@ -20,4 +20,9 @@
         android:text="작업일지 작성"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="12dp"/>
+    <Button
+        android:id="@+id/btnWorklogList"
+        android:text="작업일지 목록"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
 </LinearLayout>
