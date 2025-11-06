@@ -2,16 +2,6 @@ package com.project.dockin.data.db
 
 import androidx.room.*
 
-@Entity(tableName = "worklogs")
-data class WorkLogLocal(
-    @PrimaryKey(autoGenerate = true) val localId: Long = 0,   // ✅ 여기!
-    val serverId: Long? = null,
-    val title: String,
-    val content: String,
-    val updatedAt: Long = System.currentTimeMillis(),
-    val syncState: String = "pending"
-)
-
 @Dao
 interface WorkLogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -3,13 +3,14 @@ package com.project.dockin.ui.worklog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.collectLatest
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.project.dockin.R
 import com.project.dockin.data.db.AppDb
 import com.project.dockin.data.sync.SyncWorker
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
@@ -36,8 +37,13 @@ class WorkLogListActivity : AppCompatActivity() {
 
         // Room Flow 관찰 → 자동 갱신
         val dao = AppDb.get(this).workLogDao()
+
         lifecycleScope.launch {
-            dao.observeAll().collectLatest { adapter.submitList(it) }
+            repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                dao.observeAll().collectLatest { list ->
+                    adapter.submitList(list)
+                }
+            }
         }
 
         // 아래로 당겨 동기화(업로드) 트리거

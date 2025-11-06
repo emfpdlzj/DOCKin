@@ -1,5 +1,7 @@
 package com.project.dockin.data.db
-import androidx.room.*
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "worklogs")
 data class WorkLogLocal(
@@ -10,12 +12,3 @@ data class WorkLogLocal(
     val updatedAt: Long = System.currentTimeMillis(),
     val syncState: String = "pending"   // pending | synced | failed
 )
-
-@Dao
-interface WorkLogDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsert(e: WorkLogLocal): Long
-    @Query("SELECT * FROM worklogs WHERE syncState='pending' OR syncState='failed'")
-    suspend fun findPending(): List<WorkLogLocal>
-    @Query("UPDATE worklogs SET syncState=:state, serverId=:serverId WHERE localId=:localId")
-    suspend fun mark(localId: Long, state: String, serverId: Long?)
-}
