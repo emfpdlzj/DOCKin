@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Dockin"
+rootProject.name = "dockin"
 include(":app")

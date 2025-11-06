@@ -1,4 +1,4 @@
-package com.example.dockin
+package com.project.dockin
 
 import org.junit.Test
 

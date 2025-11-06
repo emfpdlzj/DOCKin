@@ -1,48 +1,15 @@
-# ---- OS / Editor ----
-.DS_Store
-Thumbs.db
-*.swp
-.vscode/
-
-# ---- IntelliJ / Android Studio ----
-.idea/
 *.iml
-*.ipr
-*.iws
-
-# ---- Gradle ----
-.gradle/
-**/build/
-**/out/
-**/bin/
-!gradle/wrapper/gradle-wrapper.jar
-
-# ---- Kotlin / Java ----
-**/.kotlin/
-.konan/
-kotlin-js-store/
-*.class
-
-# ---- Maven (있을 경우) ----
-target/
-
-# ---- Android ----
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
 local.properties
-**/.externalNativeBuild/
-.cxx/
-**/captures/
-**/generated/
-**/outputs/
-*.apk
-*.ap_
-*.aab
-*.dex
-# 서명/키
-*.jks
-*.keystore
-keystore.properties
-
-# ---- Logs & env ----
-*.log
-.env
-.env.*

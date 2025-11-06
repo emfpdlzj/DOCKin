@@ -1,0 +1,59 @@
+# --- OS 공통 ---
+.DS_Store
+Thumbs.db
+
+# --- IDE (Android Studio/IntelliJ) ---
+*.iml
+.idea/*
+!.idea/codeStyles/
+!.idea/codeStyles/**
+!.idea/runConfigurations/
+!.idea/runConfigurations/**
+!.idea/inspectionProfiles/
+!.idea/inspectionProfiles/**
+
+# --- Gradle ---
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-app.setting
+gradle-app.setting.bak
+
+# --- Android ---
+local.properties
+.cxx/
+captures/
+outputs/
+*/release/
+*/release/**
+
+# NDK/외부 빌드 산출물
+obj/
+
+# --- Kotlin/Compose ---
+.kotlinc/
+.compose-cache/
+*.kotlin_module
+
+# --- 서명/민감 정보 ---
+*.jks
+*.keystore
+keystore.properties
+
+# --- 로그/리포트 ---
+*.log
+**/reports/
+**/test-results/
+
+# --- Firebase/Crashlytics ---
+**/google-services.json
+**/GoogleService-Info.plist
+fabric.properties
+crashlytics-build.properties
+
+# --- Fastlane ---
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
