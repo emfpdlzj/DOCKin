@@ -20,7 +20,8 @@ class LoginActivity : AppCompatActivity() {
         val etPw = findViewById<EditText>(R.id.etPw)
         val btn = findViewById<Button>(R.id.btnLogin)
 
-        val retrofit = Network.retrofit(this)
+        val retrofit = Network.retrofit(this,
+            baseUrl = "https://ccf61d97-acab-43da-8b24-9ea5898d2750.mock.pstmn.io")
         val api = retrofit.create(AuthApi::class.java)
         val tokenStore = TokenStore(this)
 

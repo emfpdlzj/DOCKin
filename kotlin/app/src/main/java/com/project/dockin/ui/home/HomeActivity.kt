@@ -19,7 +19,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val retrofit = Network.retrofit(this, baseUrl = "http://10.0.2.2:8081/")
+        val retrofit = Network.retrofit(this,
+            baseUrl = "https://ccf61d97-acab-43da-8b24-9ea5898d2750.mock.pstmn.io")
         api = retrofit.create(AttendanceApi::class.java)
 
         findViewById<Button>(R.id.btnIn).setOnClickListener {
@@ -36,6 +37,9 @@ class HomeActivity : AppCompatActivity() {
                     .onSuccess { Toast.makeText(this@HomeActivity, "퇴근: ${it.status}", Toast.LENGTH_SHORT).show() }
                     .onFailure { Toast.makeText(this@HomeActivity, "퇴근 실패: ${it.message}", Toast.LENGTH_SHORT).show() }
             }
+        }
+        findViewById<Button>(R.id.btnWorklog).setOnClickListener {
+            startActivity(android.content.Intent(this, com.project.dockin.ui.worklog.WorkLogActivity::class.java))
         }
     }
 
