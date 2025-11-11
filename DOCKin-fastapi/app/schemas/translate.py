@@ -1,32 +1,25 @@
-# translate.py
-# /v1/translate 요청(request)과 응답(response)에 사용하는 Pydantic 스키마 정의 파일
-# 번역기(NLLB 등) 호출 전/후에 공통으로 사용될 예정
-
+# 번역 스키마
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
-# TranslateRequest 모델
-# /v1/translate 엔드포인트의 요청(request) 바디 형식 정의
-# - text: 번역할 원문 문자열
-# - source: 원문 언어 코드 (auto, ko, en 등)
-# - target: 목표 언어 코드
-# - domain: 적용 도메인 (예: shipyard)
-# - traceId: 트레이스 추적용 식별자 (옵션)
 class TranslateRequest(BaseModel):
-    text: str = Field(..., min_length=1, description="번역할 원문 텍스트")
-    source: str = Field(default="auto", description="원문 언어 코드")
-    target: str = Field(..., description="번역 대상 언어 코드")
-    domain: str = Field(default="shipyard", description="도메인명")
+    # 원문 표현
+    text: str
+    # 원문 언어 표현
+    source: str
+    # 대상 언어 표현
+    target: str
+    # 도메인 표현
+    domain: Optional[str] = "shipyard"
+    # 추적 식별자 표현
     traceId: Optional[str] = None
 
 
-# TranslateResponse 모델
-# /v1/translate 응답(response) 형식 정의
-# - translated: 번역 결과 문자열
-# - model: 사용된 번역 모델명
-# - traceId: 요청과 대응되는 추적 ID
 class TranslateResponse(BaseModel):
+    # 번역 결과 표현
     translated: str
-    model: str = "mock-nllb"
+    # 사용 모델명 표현
+    model: str
+    # 추적 식별자 표현
     traceId: Optional[str] = None
