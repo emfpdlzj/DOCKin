@@ -15,4 +15,3 @@ app.include_router(sync_translate.router)
 def root():
     # 간단한 루트 응답
     return {"hello": "fastapi-ai"}
-ç

@@ -1,20 +1,25 @@
-# /v1/chat 동기 엔드포인트 라우터 정의 파일
-# 요청 스키마는 app/schemas/chat.py 사용
-# 현재는 모의 동작으로 마지막 user 발화를 그대로 가공하여 회신
+# /v1/chat 라우터 정의 파일
+# 스프링 주도형 계약에 맞게 한 턴 생성만 수행
+# 서비스 토큰 인증을 의존성으로 적용
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from ..schemas.chat import ChatRequest, ChatResponse
+from ..core.auth import require_service_token
 
 router = APIRouter(tags=["chat"])
 
 
-@router.post("/v1/chat", response_model=ChatResponse)
+@router.post(
+    "/v1/chat",
+    response_model=ChatResponse,
+    dependencies=[Depends(require_service_token)],
+)
 async def chat(req: ChatRequest):
-    # messages 리스트에서 마지막 user 메시지 추출
+    # 마지막 user 메시지를 찾음
     last_user = next(
         (m.content for m in reversed(req.messages) if m.role == "user"), ""
     )
-    # 간단한 모의 응답 생성
+    # 모의 응답 생성
     reply = f"[{req.domain}/{req.lang}] {last_user}"
     # 응답 모델 구성
     return ChatResponse(
