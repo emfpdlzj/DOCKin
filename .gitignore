@@ -30,6 +30,8 @@ ENV/
 .rye/
 .pyenv/
 .python-version
+**/.env
+.env
 
 # --- Logs ---
 logs/
