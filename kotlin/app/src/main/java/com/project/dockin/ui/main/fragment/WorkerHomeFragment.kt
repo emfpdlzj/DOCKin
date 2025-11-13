@@ -1,7 +1,9 @@
-package com.project.dockin.ui.fragment
+package com.project.dockin.ui.main.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -12,32 +14,51 @@ import com.project.dockin.data.api.AttendanceApi
 import com.project.dockin.data.api.Network
 import kotlinx.coroutines.launch
 
-/**
- * 근로자 홈 화면 (출근/퇴근 + 오늘 근태 요약)
- */
-class WorkerHomeFragment : Fragment(R.layout.fragment_worker_home) {
+class WorkerHomeFragment : Fragment() {
 
     private lateinit var api: AttendanceApi
+
+    private lateinit var tvStatus: TextView
+    private lateinit var tvLastInOut: TextView
+    private lateinit var btnIn: Button
+    private lateinit var btnOut: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 로그인 된 상태라 토큰 헤더 붙은 retrofit 사용
+        api = Network.retrofit(requireContext()).create(AttendanceApi::class.java)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_worker_home, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val retrofit = Network.retrofit(requireContext())
-        api = retrofit.create(AttendanceApi::class.java)
-
-        val btnIn   = view.findViewById<Button>(R.id.btnIn)
-        val btnOut  = view.findViewById<Button>(R.id.btnOut)
-        val tvState = view.findViewById<TextView>(R.id.tvTodayState)
+        tvStatus   = view.findViewById(R.id.tvStatus)
+        tvLastInOut = view.findViewById(R.id.tvLastInOut)
+        btnIn      = view.findViewById(R.id.btnIn)
+        btnOut     = view.findViewById(R.id.btnOut)
 
         btnIn.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 runCatching { api.clockIn(AttendanceApi.InReq("Office_A")) }
                     .onSuccess {
-                        Toast.makeText(requireContext(), "출근: ${it.status}", Toast.LENGTH_SHORT).show()
-                        tvState.text = "오늘 상태: ${it.status}"
+                        tvStatus.text = "현재 상태: 출근 (${it.status})"
+                        tvLastInOut.text = "출근 위치: ${it.inLocation ?: "-"}"
+                        Toast.makeText(requireContext(), "출근 처리 완료", Toast.LENGTH_SHORT).show()
                     }
                     .onFailure {
-                        Toast.makeText(requireContext(), "출근 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "출근 실패: ${it.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             }
         }
@@ -46,11 +67,16 @@ class WorkerHomeFragment : Fragment(R.layout.fragment_worker_home) {
             viewLifecycleOwner.lifecycleScope.launch {
                 runCatching { api.clockOut(AttendanceApi.OutReq("사무실 5층")) }
                     .onSuccess {
-                        Toast.makeText(requireContext(), "퇴근: ${it.status}", Toast.LENGTH_SHORT).show()
-                        tvState.text = "오늘 상태: ${it.status}"
+                        tvStatus.text = "현재 상태: 퇴근 (${it.status})"
+                        tvLastInOut.text = "퇴근 위치: ${it.outLocation ?: "-"}"
+                        Toast.makeText(requireContext(), "퇴근 처리 완료", Toast.LENGTH_SHORT).show()
                     }
                     .onFailure {
-                        Toast.makeText(requireContext(), "퇴근 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "퇴근 실패: ${it.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             }
         }
