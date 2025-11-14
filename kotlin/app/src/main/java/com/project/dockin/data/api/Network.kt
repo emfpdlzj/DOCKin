@@ -25,5 +25,7 @@ object Network {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
-
+    fun arApi(ctx: Context): ArApi {
+        return retrofit(ctx).create(ArApi::class.java)
+    }
 }
