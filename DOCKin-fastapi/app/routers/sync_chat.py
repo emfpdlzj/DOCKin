@@ -1,35 +1,22 @@
-# /v1/chat
-from fastapi import APIRouter, Depends, HTTPException, status
-from ..schemas.chat import ChatRequest, ChatResponse
-from ..core.auth import require_service_token
-from ..core.config import settings
+from fastapi import APIRouter
 from openai import OpenAI
+from app.schemas.chat import ChatRequest, ChatResponse
+from app.core.config import settings
+from faster_whisper import WhisperModel
 
-client = OpenAI()
-router = APIRouter(tags=["chat"])
+# whisper tiny or base 추천
+model = WhisperModel("tiny", device="cpu")
+
+router = APIRouter()
+client = OpenAI(api_key=settings.openai_api_key)
 
 
-@router.post("/api/chat")
+@router.post("/api/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     completion = client.chat.completions.create(
-        model="gpt-4o-mini", messages=req.messages
+        model=settings.openai_model, messages=[m.model_dump() for m in req.messages]
     )
 
-    return {"reply": completion.choices[0].message.content, "model": "gpt-4o-mini"}
+    reply = completion.choices[0].message.content
 
-
-async def chat(req: ChatRequest):
-    # 모의 응답 분기
-    if not settings.openai_enabled:
-        # 마지막 user 메시지 추출
-        last_user = next(
-            (m.content for m in reversed(req.messages) if m.role == "user"), ""
-        )
-        # 모의 응답 생성
-        reply = f"[mock {req.domain}/{req.lang}] {last_user}"
-        return ChatResponse(reply=reply, model="mock", traceId=req.traceId)
-    # 실제 모델 경로는 추후 연결
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="chat_provider_not_configured",
-    )
+    return ChatResponse(reply=reply, model=settings.openai_model, traceId=req.traceId)

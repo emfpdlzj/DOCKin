@@ -1,48 +1,30 @@
-# STT 라우터 정의 파일
-from fastapi import APIRouter, Depends, UploadFile, File, Request, HTTPException, status
-from ..core.auth import require_service_token
-from ..schemas.stt import SttUrlRequest, SttResponse
+from fastapi import APIRouter, UploadFile, File
+from app.schemas.stt import SttResponse
 from faster_whisper import WhisperModel
+import tempfile
 
-router = APIRouter(tags=["stt"])
-model = WhisperModel("small")
+router = APIRouter()
 
-@router.post("/api/worklogs/stt")
-async def stt(file: UploadFile):
-    audio_bytes = await file.read()
-    result = model.transcribe(audio_bytes)
-    return {"text": result.text}
-async def stt(request: Request, file: UploadFile | None = File(None)):
-    # Content-Type 분기 표현
-    ct = request.headers.get("content-type", "")
-    # 파일 업로드 분기 표현
-    if file is not None:
-        # 파일 이름 획득 표현
-        fname = getattr(file, "filename", "audio.wav")
-        # 바이트 일부 읽기 표현
-        await file.read()
-        # 모의 응답 생성 표현
-        return SttResponse(
-            text="음성 인식 결과 예시",
-            provider="mock-whisper",
-            traceId=None,
-            meta={"source": "file", "filename": fname},
-        )
-    # JSON 본문 분기 표현
-    if "application/json" in ct:
-        # 본문 파싱 표현
-        body = await request.json()
-        # 스키마 검증 표현
-        data = SttUrlRequest(**body)
-        # 모의 응답 생성 표현
-        return SttResponse(
-            text=f"[mock stt {data.lang}] from {data.mediaUrl}",
-            provider="mock-whisper",
-            traceId=data.traceId,
-            meta={"source": "url"},
-        )
-    # 지원하지 않는 형식 처리 표현
-    raise HTTPException(
-        status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        detail="unsupported_content_type",
-    )
+model = WhisperModel("tiny", device="cpu")
+
+
+@router.post("/api/worklogs/stt", response_model=SttResponse)
+async def stt(file: UploadFile = File(None), mediaUrl: str | None = None):
+
+    # 1) 파일 업로드 기반 (kotlin 앱에서 녹음 → multipart 업로드)
+    if file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            tmp.write(await file.read())
+            audio_path = tmp.name
+
+        segments, info = model.transcribe(audio_path, beam_size=1, language="ko")
+        text = "".join([seg.text for seg in segments])
+
+        return SttResponse(text=text, provider="whisper-faster")
+
+    # 2) URL 기반 (스프링 → fastapi URL전달)
+    if mediaUrl:
+        # 필요하면 httpx로 다운로드 구현해줄게
+        return SttResponse(text="[미구현] URL 기반 STT 필요시 추가", provider="whisper")
+
+    return SttResponse(text="", provider="whisper")
