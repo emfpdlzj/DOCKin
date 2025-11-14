@@ -1,13 +1,21 @@
 package com.project.dockin
 
 import android.os.Bundle
-import com.unity3d.player.UnityPlayerActivity
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
-class ARActivity : UnityPlayerActivity() {
+class ARActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Unity 씬은 UnityPlayerActivity가 알아서 로딩해줌
-        // 여기서는 아직 아무 브리지 호출 안 하고, "Unity 화면 잘 뜨는지"만 확인 단계
+        // TODO: 나중에 Unity View 붙이면 여기서 setContentView(...) or Unity 초기화
+        // 지금은 빌드만 통과시키는 스텁(stub) 상태로 둠
+    }
+
+    // 나중에 Unity에서 호출해도 되는 public 함수
+    fun showToastFromUnity(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 }
