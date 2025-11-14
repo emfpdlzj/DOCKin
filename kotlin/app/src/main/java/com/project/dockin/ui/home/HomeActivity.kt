@@ -8,11 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.project.dockin.R
 import com.project.dockin.data.api.AttendanceApi
 import com.project.dockin.data.api.Network
+import com.project.dockin.ui.attendance.AttendanceHistoryActivity
+import com.project.dockin.ui.worklog.WorkLogActivity
+import com.project.dockin.ui.worklog.WorkLogListActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
+
     private val scope = MainScope()
     private lateinit var api: AttendanceApi
 
@@ -23,7 +27,6 @@ class HomeActivity : AppCompatActivity() {
         val retrofit = Network.retrofit(this)
         api = retrofit.create(AttendanceApi::class.java)
 
-        // 출근
         findViewById<Button>(R.id.btnIn).setOnClickListener {
             scope.launch {
                 runCatching { api.clockIn(AttendanceApi.InReq("Office_A")) }
@@ -44,7 +47,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // 퇴근
         findViewById<Button>(R.id.btnOut).setOnClickListener {
             scope.launch {
                 runCatching { api.clockOut(AttendanceApi.OutReq("사무실 5층")) }
@@ -65,47 +67,17 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // 작업일지 작성
+        // 근태 기록 보기
+        findViewById<Button>(R.id.btnAttendanceHistory).setOnClickListener {
+            startActivity(Intent(this, AttendanceHistoryActivity::class.java))
+        }
+
         findViewById<Button>(R.id.btnWorklog).setOnClickListener {
-            startActivity(Intent(this, com.project.dockin.ui.worklog.WorkLogActivity::class.java))
+            startActivity(Intent(this, WorkLogActivity::class.java))
         }
 
-        // 작업일지 목록
         findViewById<Button>(R.id.btnWorklogList).setOnClickListener {
-            startActivity(Intent(this, com.project.dockin.ui.worklog.WorkLogListActivity::class.java))
-        }
-
-        // 근태 기록 조회
-        findViewById<Button>(R.id.btnAttendanceList).setOnClickListener {
-            scope.launch {
-                runCatching { api.list() }
-                    .onSuccess { list ->
-                        if (list.isEmpty()) {
-                            Toast.makeText(
-                                this@HomeActivity,
-                                "근태 기록이 없습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            // 가장 마지막 기록 하나만 간단히 보여주자
-                            val latest = list.last()
-                            val msg = buildString {
-                                append("총 ${list.size}건\n")
-                                append("마지막 상태: ${latest.status}\n")
-                                append("출근: ${latest.clockInTime ?: "-"}\n")
-                                append("퇴근: ${latest.clockOutTime ?: "-"}")
-                            }
-                            Toast.makeText(this@HomeActivity, msg, Toast.LENGTH_LONG).show()
-                        }
-                    }
-                    .onFailure {
-                        Toast.makeText(
-                            this@HomeActivity,
-                            "근태 조회 실패: ${it.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            }
+            startActivity(Intent(this, WorkLogListActivity::class.java))
         }
     }
 

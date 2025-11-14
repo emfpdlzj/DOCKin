@@ -1,4 +1,4 @@
-package com.project.dockin.ui.main.fragment
+package com.project.dockin.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

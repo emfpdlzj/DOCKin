@@ -5,25 +5,29 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AttendanceApi {
-    @POST("api/attendance/in")
-    suspend fun clockIn(@Body body: InReq): AttendanceRes
-    data class InReq(val inLocation: String)
 
-    @POST("api/attendance/out")
-    suspend fun clockOut(@Body body: OutReq): AttendanceRes
+    data class InReq(val inLocation: String)
     data class OutReq(val outLocation: String)
 
-    @GET("api/attendance")
-    suspend fun list(): List<AttendanceRes>
-}
+    // 근태 단건 응답(로그에 찍힌 JSON 구조 기반)
+    data class AttendanceDto(
+        val id: Long,
+        val userId: String,
+        val clockInTime: String,
+        val clockOutTime: String?,
+        val totalWorkTime: String?,   // 예: "PT6.276104S"
+        val status: String,           // "NORMAL", "LATE" 등
+        val inLocation: String?,
+        val outLocation: String?
+    )
 
-data class AttendanceRes(
-    val id: Long,
-    val userId: String,
-    val clockInTime: String?,
-    val clockOutTime: String?,
-    val totalWorkTime: String?,
-    val status: String,
-    val inLocation: String?,
-    val outLocation: String?
-)
+    @POST("/api/attendance/in")
+    suspend fun clockIn(@Body req: InReq): AttendanceDto
+
+    @POST("/api/attendance/out")
+    suspend fun clockOut(@Body req: OutReq): AttendanceDto
+
+    // ✅ 내 근태 기록 전체 조회 (백엔드랑 URL만 맞춰주면 됨)
+    @GET("/api/attendance/my")
+    suspend fun getMyAttendance(): List<AttendanceDto>
+}
