@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ecb3a057-5579-4454-8c65-be901a801d8a" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/springboot">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DOCKin" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="35SQ5BMH90kW4Ktmlq441iyQ4h6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DOCKin.executor": "Run",
+    "Application.DocKinApplication.executor": "Run",
+    "Gradle.Build DOCKin-springboot.executor": "Run",
+    "Gradle.DOCKin-springboot [:com.example.DOCKin.DocKinApplication.main()].executor": "Debug",
+    "Gradle.springboot [:com.example.DOCKin.DOCKinApplication.main()].executor": "Run",
+    "Gradle.springboot [:com.example.DOCKin.DocKinApplication.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/khjae/Downloads/DOCKin-springboot"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.DOCKinApplication">
+    <configuration name="DOCKin" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.example.DOCKin.DOCKinApplication" />
+      <module name="DOCKin" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DOCKinApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.DOCKin.DOCKinApplication" />
+      <module name="com.example.DOCKin.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.DOCKin.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DocKinApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.DOCKin.DocKinApplication" />
+      <module name="com.example.DOCKin.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.DOCKin.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.DOCKin" />
+      <item itemvalue="Application.DOCKinApplication" />
+      <item itemvalue="Application.DocKinApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DOCKinApplication" />
+        <item itemvalue="Application.DocKinApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ecb3a057-5579-4454-8c65-be901a801d8a" name="Changes" comment="" />
+      <created>1763100807926</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763100807926</updated>
+    </task>
+    <servers />
+  </component>
+</project>
