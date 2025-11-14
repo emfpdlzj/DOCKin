@@ -2,15 +2,16 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Request, HTTPException, status
 from ..core.auth import require_service_token
 from ..schemas.stt import SttUrlRequest, SttResponse
+from faster_whisper import WhisperModel
 
 router = APIRouter(tags=["stt"])
+model = WhisperModel("small")
 
-
-@router.post(
-    "/api/worklogs/stt",
-    response_model=SttResponse,
-    dependencies=[Depends(require_service_token)],
-)
+@router.post("/api/worklogs/stt")
+async def stt(file: UploadFile):
+    audio_bytes = await file.read()
+    result = model.transcribe(audio_bytes)
+    return {"text": result.text}
 async def stt(request: Request, file: UploadFile | None = File(None)):
     # Content-Type 분기 표현
     ct = request.headers.get("content-type", "")

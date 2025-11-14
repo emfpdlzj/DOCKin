@@ -13,9 +13,8 @@ class Settings(BaseSettings):
     callback_token: str = "change-callback"
 
     # 모델 및 기능 토글
-    chat_model: str = "gpt-4o-mini"
-    openai_enabled: bool = False
-    translate_enabled: bool = False
+    openai_api_key: str | None = None
+    openai_model: str = "gpt-4o-mini"
 
     class Config:
         env_file = ".env"

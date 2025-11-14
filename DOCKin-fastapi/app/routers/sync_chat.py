@@ -3,15 +3,21 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from ..schemas.chat import ChatRequest, ChatResponse
 from ..core.auth import require_service_token
 from ..core.config import settings
+from openai import OpenAI
 
+client = OpenAI()
 router = APIRouter(tags=["chat"])
 
 
-@router.post(
-    "/api/chat",
-    response_model=ChatResponse,
-    dependencies=[Depends(require_service_token)],
-)
+@router.post("/api/chat")
+async def chat(req: ChatRequest):
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini", messages=req.messages
+    )
+
+    return {"reply": completion.choices[0].message.content, "model": "gpt-4o-mini"}
+
+
 async def chat(req: ChatRequest):
     # 모의 응답 분기
     if not settings.openai_enabled:
