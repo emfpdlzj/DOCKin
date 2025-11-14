@@ -1,36 +1,71 @@
 package com.project.dockin.data.api
 
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface AiApi {
 
-    // STT 변환 요청  POST /api/worklogs/stt
+    // 1) STT: /api/worklogs/stt
+    data class SttResponse(
+        val text: String,
+        val provider: String?
+    )
+
     @Multipart
     @POST("/api/worklogs/stt")
     suspend fun requestStt(
-        @Part file: MultipartBody.Part,
-        @Part("lang") lang: RequestBody? = null
+        @Part file: MultipartBody.Part
     ): SttResponse
 
-    data class SttResponse(
-        val text: String
+    // 2) 번역: /api/translate
+    data class TranslateRequest(
+        val text: String,
+        val source: String,
+        val target: String,
+        val traceId: String? = null
     )
 
-    // 텍스트 번역 요청  POST /api/translate
+    data class TranslateResponse(
+        val translated: String,
+        val model: String?,
+        val traceId: String?
+    )
+
     @POST("/api/translate")
     suspend fun translate(
         @Body req: TranslateRequest
     ): TranslateResponse
 
-    data class TranslateRequest(
-        val text: String,
-        val sourceLang: String,
-        val targetLang: String
+    // 3) 챗봇: /api/chat
+    data class ChatMessage(
+        val role: String,   // "user" / "assistant"
+        val content: String
     )
 
-    data class TranslateResponse(
-        val translatedText: String
+    data class ChatRequest(
+        val messages: List<ChatMessage>,
+        val domain: String = "shipyard",
+        val lang: String = "ko",
+        val traceId: String? = null
     )
+
+    data class ChatResponse(
+        val reply: String,
+        val model: String?,
+        val usage: Usage?,
+        val traceId: String?
+    ) {
+        data class Usage(
+            val input: Int?,
+            val output: Int?
+        )
+    }
+
+    @POST("/api/chat")
+    suspend fun chat(
+        @Body req: ChatRequest
+    ): ChatResponse
 }
