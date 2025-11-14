@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/rootWorklog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- 상단 탭: 작성 / 번역 -->
+    <!-- 탭 바: 작성 / 번역 -->
     <LinearLayout
-        android:id="@+id/layoutTabs"
+        android:id="@+id/tabBar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal">
@@ -18,8 +19,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="작성"
-            android:textStyle="bold"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:background="@android:color/white" />
 
         <TextView
@@ -29,30 +29,31 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="번역"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:background="@android:color/darker_gray" />
     </LinearLayout>
 
-    <!-- 내용 영역 -->
-    <FrameLayout
+    <!-- 아래 내용은 스크롤 가능 -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-        <!-- ① 작업일지 작성 화면 -->
-        <ScrollView
-            android:id="@+id/layoutWrite"
+        <LinearLayout
+            android:id="@+id/contentRoot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <!-- 작성 탭 내용 -->
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
+                android:id="@+id/layoutWrite"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <!-- 제목 -->
                 <TextView
                     android:id="@+id/tvWorklogTitleLabel"
                     android:layout_width="wrap_content"
@@ -71,7 +72,6 @@
                     android:background="@android:drawable/edit_text"
                     android:padding="8dp" />
 
-                <!-- 내용 -->
                 <TextView
                     android:id="@+id/tvWorklogContentLabel"
                     android:layout_width="wrap_content"
@@ -85,14 +85,20 @@
                 <EditText
                     android:id="@+id/etContent"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:hint="작업 내용을 입력하세요"
+                    android:layout_height="180dp"
+                    android:hint="작업 내용을 입력하세요 (STT 버튼으로 음성 입력도 가능)"
                     android:gravity="top"
                     android:inputType="textMultiLine"
                     android:background="@android:drawable/edit_text"
                     android:padding="8dp" />
 
-                <!-- 저장 버튼 -->
+                <Button
+                    android:id="@+id/btnStt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="음성 파일에서 텍스트 추출(STT)" />
+
                 <Button
                     android:id="@+id/btnSave"
                     android:layout_width="match_parent"
@@ -100,14 +106,13 @@
                     android:layout_marginTop="16dp"
                     android:text="작업일지 서버로 저장" />
 
-                <!-- 같은 구역 근무일지 섹션 -->
                 <TextView
-                    android:id="@+id/tvSameAreaHeader"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvSameAreaLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="같은 구역 근무일지"
+                    android:text="같은 구역 근로자 작업일지"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="8dp" />
 
@@ -115,108 +120,95 @@
                     android:id="@+id/rvSameAreaWorklogs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
+                    android:overScrollMode="never" />
 
             </LinearLayout>
-        </ScrollView>
 
-        <!-- ② 작업일지 번역 화면 -->
-        <ScrollView
-            android:id="@+id/layoutTranslate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:visibility="gone">
-
+            <!-- 번역 탭 내용 -->
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
+                android:id="@+id/layoutTranslate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <!-- 언어 선택/표시 (간단 버전) -->
                 <TextView
-                    android:id="@+id/tvLangTitle"
+                    android:id="@+id/tvTranslateTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="언어 변경"
+                    android:text="작업일지 번역"
                     android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/tvSourceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원문 미리보기"
                     android:textSize="14sp"
+                    android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
 
+                <TextView
+                    android:id="@+id/tvSourceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="8dp"
+                    android:text="작성 탭에서 작업일지 내용을 입력하면 여기 원문이 보입니다." />
+
                 <LinearLayout
+                    android:id="@+id/langRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginTop="16dp">
 
-                    <TextView
-                        android:id="@+id/tvSourceLang"
+                    <Spinner
+                        android:id="@+id/spSourceLang"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Spinner
+                        android:id="@+id/spTargetLang"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="원문: 한국어"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/tvTargetLang"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="번역: 베트남어"
-                        android:textSize="13sp" />
+                        android:layout_marginStart="8dp" />
                 </LinearLayout>
 
-                <!-- 원문 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="원문"
-                    android:textStyle="bold"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp" />
-
-                <EditText
-                    android:id="@+id/etOriginalText"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:hint="번역할 작업일지 내용을 입력하거나 선택하세요"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:background="@android:drawable/edit_text"
-                    android:padding="8dp" />
-
-                <!-- 번역 버튼 -->
                 <Button
-                    android:id="@+id/btnRequestTranslate"
+                    android:id="@+id/btnTranslate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="번역 요청" />
 
-                <!-- 번역 결과 -->
                 <TextView
+                    android:id="@+id/tvTranslatedLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="번역 결과"
-                    android:textStyle="bold"
                     android:textSize="14sp"
+                    android:textStyle="bold"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="4dp" />
 
-                <TextView
-                    android:id="@+id/tvTranslatedText"
+                <EditText
+                    android:id="@+id/etTranslated"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="140dp"
+                    android:layout_height="160dp"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
                     android:background="@android:drawable/edit_text"
                     android:padding="8dp"
-                    android:text="번역된 내용이 여기 표시됩니다."
-                    android:gravity="top" />
+                    android:hint="번역 결과가 여기에 표시됩니다." />
             </LinearLayout>
-        </ScrollView>
 
-    </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
