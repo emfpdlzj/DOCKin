@@ -14,17 +14,25 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/tvSafetyDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="근무자가 봐야 할 안전교육 영상과 이수 현황을 확인할 수 있습니다."
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
     <Button
-        android:id="@+id/btnSafetyLearnList"
+        android:id="@+id/btnOpenSafetyCourses"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="내 미이수 영상 / 안전교육 목록" />
 
     <Button
-        android:id="@+id/btnSafetyAdmin"
+        android:id="@+id/btnOpenLaborAgreement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="(관리자) 이수 현황 / 점검 목록"
+        android:text="월별 근로 동의서 서명하기"
         android:layout_marginTop="12dp" />
 
 </LinearLayout>
