@@ -19,7 +19,7 @@ import com.project.dockin.data.api.Network
 import com.project.dockin.data.repo.ArRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
+import com.project.dockin.ui.common.BaseActivity
 class ArMemoActivity : AppCompatActivity() {
 
     private val viewModel: ArMemoViewModel by viewModels {

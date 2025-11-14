@@ -10,6 +10,7 @@ import com.project.dockin.R
 import com.project.dockin.data.api.AttendanceApi
 import com.project.dockin.data.api.Network
 import kotlinx.coroutines.launch
+import com.project.dockin.ui.common.BaseActivity
 
 class AttendanceHistoryActivity : AppCompatActivity() {
 

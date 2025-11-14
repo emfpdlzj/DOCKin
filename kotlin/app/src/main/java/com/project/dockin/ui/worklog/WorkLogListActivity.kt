@@ -14,6 +14,7 @@ import com.project.dockin.data.api.Network
 import com.project.dockin.data.repo.WorkLogRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.project.dockin.ui.common.BaseActivity
 
 class WorkLogListActivity : AppCompatActivity() {
 

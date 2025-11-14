@@ -13,7 +13,7 @@ import com.project.dockin.ui.fragment.SafetyLearnFragment
 import com.project.dockin.ui.fragment.WorkLogFragment
 import com.project.dockin.ui.fragment.WorkerHomeFragment
 import com.project.dockin.util.JwtUtils
-
+import com.project.dockin.ui.common.BaseActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView

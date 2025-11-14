@@ -26,6 +26,7 @@ import okhttp3.RequestBody
 import java.io.File
 import java.io.InputStream
 import android.media.MediaRecorder
+import com.project.dockin.ui.common.BaseActivity
 
 class WorkLogActivity : AppCompatActivity() {
 

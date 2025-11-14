@@ -10,6 +10,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.project.dockin.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.project.dockin.ui.common.BaseActivity
 
 class SafetyListActivity : AppCompatActivity() {
     private val vm: SafetyViewModel by viewModels { SafetyVMFactory(this) }

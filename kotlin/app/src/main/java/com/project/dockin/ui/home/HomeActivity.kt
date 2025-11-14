@@ -14,6 +14,7 @@ import com.project.dockin.ui.worklog.WorkLogListActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import com.project.dockin.ui.common.BaseActivity
 
 class HomeActivity : AppCompatActivity() {
 
