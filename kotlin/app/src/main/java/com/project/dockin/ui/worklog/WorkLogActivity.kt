@@ -28,12 +28,12 @@ class WorkLogActivity : AppCompatActivity() {
     private val scope = MainScope()
     private lateinit var aiApi: AiApi
 
-    private lateinit var edtContent: EditText
-    private lateinit var edtTranslated: EditText
+    private lateinit var etContent: EditText
+    private lateinit var etTranslated: EditText
     private lateinit var btnStt: Button
     private lateinit var btnTranslate: Button
-    private lateinit var spSrcLang: Spinner
-    private lateinit var spTgtLang: Spinner
+    private lateinit var spSourceLang: Spinner
+    private lateinit var spTargetLang: Spinner
 
     private val PICK_AUDIO = 1001
 
@@ -41,7 +41,6 @@ class WorkLogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worklog)
 
-        // 1) FastAPI용 AiApi 사용
         aiApi = Network.aiApi()
 
         val tabWrite = findViewById<TextView>(R.id.tabWrite)
@@ -49,37 +48,48 @@ class WorkLogActivity : AppCompatActivity() {
         val layoutWrite = findViewById<View>(R.id.layoutWrite)
         val layoutTranslate = findViewById<View>(R.id.layoutTranslate)
 
-        edtContent = findViewById(R.id.edtContent)
-        edtTranslated = findViewById(R.id.edtTranslated)
+        etContent = findViewById(R.id.etContent)
+        etTranslated = findViewById(R.id.etTranslated)
         btnStt = findViewById(R.id.btnStt)
         btnTranslate = findViewById(R.id.btnTranslate)
 
-        // xml에서 Spinner id는 spSrcLang / spTgtLang 으로 맞춰둠
-        spSrcLang = findViewById(R.id.spSrcLang)
-        spTgtLang = findViewById(R.id.spTgtLang)
+        spSourceLang = findViewById(R.id.spSourceLang)
+        spTargetLang = findViewById(R.id.spTargetLang)
 
-        // 탭 전환 로직 그대로
-        fun showWriteTab() { ... }
-        fun showTranslateTab() { ... }
+        fun showWriteTab() {
+            layoutWrite.visibility = View.VISIBLE
+            layoutTranslate.visibility = View.GONE
+            tabWrite.setBackgroundColor(Color.WHITE)
+            tabTranslate.setBackgroundColor(Color.LTGRAY)
+        }
+
+        fun showTranslateTab() {
+            layoutWrite.visibility = View.GONE
+            layoutTranslate.visibility = View.VISIBLE
+            tabWrite.setBackgroundColor(Color.LTGRAY)
+            tabTranslate.setBackgroundColor(Color.WHITE)
+
+            val tvSourceText = findViewById<TextView>(R.id.tvSourceText)
+            tvSourceText.text = etContent.text.toString()
+        }
+
         tabWrite.setOnClickListener { showWriteTab() }
         tabTranslate.setOnClickListener { showTranslateTab() }
         showWriteTab()
 
-        // STT 버튼 -> 오디오 파일 선택
         btnStt.setOnClickListener {
             startAudioPicker()
         }
 
-        // 번역 버튼 -> FastAPI /api/translate 호출
         btnTranslate.setOnClickListener {
-            val text = edtContent.text.toString()
+            val text = etContent.text.toString()
             if (text.isBlank()) {
                 Toast.makeText(this, "번역할 내용을 입력하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val srcCode = spinnerToLangCode(spSrcLang.selectedItem?.toString())
-            val tgtCode = spinnerToLangCode(spTgtLang.selectedItem?.toString())
+            val srcCode = spinnerToLangCode(spSourceLang.selectedItem?.toString())
+            val tgtCode = spinnerToLangCode(spTargetLang.selectedItem?.toString())
 
             scope.launch {
                 runCatching {
@@ -90,7 +100,7 @@ class WorkLogActivity : AppCompatActivity() {
                     )
                     aiApi.translate(body)
                 }.onSuccess { res ->
-                    edtTranslated.setText(res.translated)
+                    etTranslated.setText(res.translated)
                 }.onFailure { e ->
                     Toast.makeText(
                         this@WorkLogActivity,
@@ -102,12 +112,21 @@ class WorkLogActivity : AppCompatActivity() {
         }
     }
 
-    // 오디오 선택
-    private fun startAudioPicker() { ... }
+    private fun startAudioPicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "audio/*"
+        }
+        startActivityForResult(intent, PICK_AUDIO)
+    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { ... }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    // STT: FastAPI /api/worklogs/stt
+        if (requestCode == PICK_AUDIO && resultCode == RESULT_OK) {
+            data?.data?.let { uploadForStt(it) }
+        }
+    }
+
     private fun uploadForStt(uri: Uri) {
         scope.launch {
             runCatching {
@@ -120,9 +139,9 @@ class WorkLogActivity : AppCompatActivity() {
 
                 aiApi.requestStt(part)
             }.onSuccess { res ->
-                val old = edtContent.text.toString()
+                val old = etContent.text.toString()
                 val merged = if (old.isBlank()) res.text else "$old\n${res.text}"
-                edtContent.setText(merged)
+                etContent.setText(merged)
             }.onFailure {
                 Toast.makeText(
                     this@WorkLogActivity,
@@ -133,11 +152,30 @@ class WorkLogActivity : AppCompatActivity() {
         }
     }
 
-    // spinner 라벨 -> 언어코드
-    private fun spinnerToLangCode(label: String?): String { ... }
+    private fun getFileName(uri: Uri): String? {
+        var name: String? = null
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val idx = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (it.moveToFirst() && idx >= 0) {
+                name = it.getString(idx)
+            }
+        }
+        return name
+    }
+
+    private fun spinnerToLangCode(label: String?): String =
+        when (label) {
+            "한국어", "Korean" -> "ko"
+            "영어", "English" -> "en"
+            "베트남어", "Tiếng Việt" -> "vi"
+            "태국어", "ไทย" -> "th"
+            "중국어", "中文" -> "zh"
+            else -> "ko"
+        }
 
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
     }
-}}
+}

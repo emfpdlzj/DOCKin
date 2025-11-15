@@ -72,5 +72,4 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") //OkHTTP 로깅 인터셉터
     implementation("androidx.security:security-crypto:1.1.0-alpha06")     // 🔐 Jetpack Security Crypto (MasterKey, EncryptedSharedPreferences)
 
-    implementation(project(":unityLibrary"))//유니티
 }

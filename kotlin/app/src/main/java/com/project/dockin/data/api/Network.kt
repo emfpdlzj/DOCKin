@@ -1,31 +1,50 @@
 package com.project.dockin.data.api
 
 import android.content.Context
-import com.project.dockin.data.api.AiApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 object Network {
 
-    // 기존: 스프링 서버(8081)용 Retrofit (토큰 인터셉터 붙은 것)
+    // 공통 Moshi 인스턴스 (Kotlin 지원)
+    private val moshi: Moshi by lazy {
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
+
+    /**
+     * Spring Boot 서버 (포트 8081)용 Retrofit
+     */
     fun retrofit(context: Context): Retrofit {
         val client = OkHttpClient.Builder()
-            // 여기에 Authorization 헤더 넣는 인터셉터 등 이미 있을 것
+            // TODO: AuthHeaderInterceptor 붙이면 여기
             .build()
 
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8081/")
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
-    // 새로 추가: FastAPI(8000)용 Retrofit (인증 없이 사용)
+    /**
+     * AR 메모 등 Spring API용 ArApi
+     */
+    fun arApi(context: Context): ArApi {
+        return retrofit(context).create(ArApi::class.java)
+    }
+
+    /**
+     * FastAPI 서버 (포트 8000)용 Retrofit – AI 기능
+     */
     private val aiRetrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8000/")   // FastAPI 포트 8000
-            .addConverterFactory(MoshiConverterFactory.create())
+            .baseUrl("http://10.0.2.2:8000/")
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 

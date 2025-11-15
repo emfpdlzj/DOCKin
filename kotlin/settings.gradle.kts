@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "dockin"
-include(":app",":unityLibrary")
+include(":app")
