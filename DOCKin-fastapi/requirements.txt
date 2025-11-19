@@ -1,4 +1,3 @@
 transformers
 sentencepiece
-torch
 faster-whisper
